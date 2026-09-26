@@ -70,7 +70,7 @@
     position: relative; width: 100vw; min-height: 560px;
     height: 100vh;
     height: calc(var(--vh, 1vh) * 100);
-    overflow: hidden; background: #05060a; touch-action: none;
+    overflow: hidden; background: #05060a; touch-action: pan-y;
   }
   .hero .layer-img2 { position: absolute; inset: 0; width: 100%; height: 100%;
     object-fit: cover; object-position: center 18%; z-index: 1;
@@ -180,6 +180,81 @@
 
   footer { padding: 26px 6vw; text-align: center; color: #5b6270; font-size: 13px;
     border-top: 1px solid var(--border); background: var(--bg); }
+
+  /* Responsive layout across desktop, tablet, and phone widths. */
+  :root { padding-top: 0; padding-bottom: 0; }
+  html { scroll-padding-top: calc(72px + env(safe-area-inset-top, 0px)); }
+  .wrap, nav .inner { width: 100%; max-width: 1200px; padding-inline: clamp(20px, 5vw, 72px); }
+  section { scroll-margin-top: calc(72px + env(safe-area-inset-top, 0px)); }
+  img, canvas, svg { max-width: 100%; }
+  .hero { width: 100%; }
+  .hero::after {
+    content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+    background: linear-gradient(to top, rgba(5,6,10,.88), rgba(5,6,10,.4) 38%, transparent 75%);
+  }
+  .hero .overlay-ui { padding-inline: clamp(20px, 5vw, 72px); padding-bottom: max(64px, 8vh); }
+  .hero .hint { bottom: max(20px, env(safe-area-inset-bottom, 0px) + 12px); white-space: nowrap; }
+  .nav-toggle, .social-row a { min-width: 44px; min-height: 44px; }
+  nav .logo { min-width: 0; }
+  .btn { min-height: 44px; justify-content: center; text-align: center; }
+  .skill-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); }
+  .project-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
+  .edu-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
+  .contact-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .contact-grid > * { min-width: 0; }
+  .contact-info a, .project-card, .skill-card, .edu-card { overflow-wrap: anywhere; }
+  form.contact-form input, form.contact-form textarea { width: 100%; min-width: 0; }
+  :is(a, button, input, textarea):focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  @media (max-width: 900px) {
+    .nav-toggle { display: flex; flex: 0 0 44px; }
+    nav .links {
+      position: absolute; top: 100%; left: 0; right: 0;
+      flex-direction: column; gap: 0; flex-wrap: nowrap;
+      background: rgba(11,13,18,.98); border-bottom: 1px solid var(--border);
+      max-height: 0; overflow: hidden; opacity: 0; visibility: hidden;
+      transition: max-height .28s ease, opacity .2s ease, visibility .2s;
+    }
+    nav .links.open { max-height: min(450px, calc(100dvh - 64px)); overflow-y: auto; opacity: 1; visibility: visible; }
+    nav .links a { display: flex; align-items: center; min-height: 48px; padding: 12px clamp(20px, 5vw, 72px); border-top: 1px solid var(--border); width: 100%; font-size: 15px; }
+    .contact-grid { gap: 28px; }
+  }
+  @media (max-width: 760px) {
+    .contact-grid { grid-template-columns: minmax(0, 1fr); }
+    #about { padding-block: 72px 52px; }
+    #skills, #projects, #experience, #education { padding-block: 56px; }
+    #contact { padding-block: 64px 72px; }
+  }
+  @media (max-width: 600px) {
+    .hero { height: auto; min-height: max(600px, 100svh); }
+    .hero .overlay-ui { padding-top: calc(100px + env(safe-area-inset-top, 0px)); padding-bottom: max(76px, env(safe-area-inset-bottom, 0px) + 62px); }
+    .hero h1 { font-size: clamp(30px, 10vw, 44px); }
+    .hero .kicker { max-width: 34ch; line-height: 1.55; }
+    .hero .cta-row { gap: 10px; margin-top: 20px; }
+    .hero .cta-row .btn { flex: 1 1 135px; padding-inline: 12px; }
+    .hero .cta-row .btn:first-child { flex-basis: 100%; }
+    .hero .hint { font-size: 11px; letter-spacing: .03em; }
+    .role-badge { line-height: 1.5; border-radius: 12px; }
+    .skill-card, .project-card, .edu-card, .timeline-item { padding: 18px; }
+    .earlier-item { flex-direction: column; gap: 4px; }
+    .contact-info { line-height: 1.65; }
+    .contact-info p { margin-block: 12px; }
+  }
+  @media (max-width: 360px) {
+    nav .logo { font-size: 13px; }
+    .hero .cta-row .btn { flex-basis: 100%; }
+    .hero { min-height: max(660px, 100svh); }
+    .tag { font-size: 12px; }
+  }
+  @media (max-height: 520px) and (orientation: landscape) {
+    .hero { min-height: 440px; height: auto; }
+    .hero .overlay-ui { padding-top: 90px; padding-bottom: 36px; }
+    .hero .hint { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+  }
 </style>
 </head>
 <body>
@@ -187,7 +262,7 @@
 <nav>
   <div class="inner">
     <a class="logo" href="#top">Narayanan Ganabathi</a>
-    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navLinks">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
     <div class="links" id="navLinks">
@@ -207,7 +282,7 @@
   <div class="overlay-ui">
     <div class="kicker">SAP BTP &middot; Fiori &middot; RAP &middot; ABAP Cloud &middot; Python &middot; Data Analytics</div>
     <h1>Narayanan Ganabathi</h1>
-    <p class="tagline">SAP &amp; Data Analytics professional turning master data, migrations and manual processes into clean, automated systems. Move your cursor to look closer.</p>
+    <p class="tagline">SAP &amp; Data Analytics professional turning master data, migrations and manual processes into clean, automated systems. Explore the image to look closer.</p>
     <div class="cta-row">
       <a class="btn btn-primary" href="#experience">View Experience</a>
       <a class="btn btn-outline" href="https://github.com/NARAYNAN888" target="_blank" rel="noopener">GitHub</a>
@@ -216,7 +291,7 @@
   </div>
   <div class="hint" id="hint">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 3v9h5l-7 9-7-9h5V3z"/></svg>
-    Move your cursor to reveal
+    Move or touch to reveal
   </div>
 </div>
 
@@ -487,7 +562,13 @@ document.getElementById('year').textContent = new Date().getFullYear();
     a.addEventListener('click', closeMenu);
   });
   window.addEventListener('resize', function() {
-    if (window.innerWidth > 700) closeMenu();
+    if (window.innerWidth > 900) closeMenu();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeMenu();
+      toggle.focus();
+    }
   });
 })();
 
@@ -516,6 +597,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
 
   function resize() {
     const rect = hero.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
     cw = rect.width; ch = rect.height;
     canvas.width = Math.round(cw * dpr);
     canvas.height = Math.round(ch * dpr);

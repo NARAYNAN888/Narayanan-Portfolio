@@ -631,7 +631,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
   if (img2El.complete) updateImg2Position();
   else img2El.addEventListener('load', updateImg2Position);
 
-  const FACE_CENTER_IMG1 = 0.15; // fraction of image1 height where the face sits
+  const FACE_CENTER_IMG1 = 0.25; // fraction of image1 height where the face sits
 
   function coverCropRect(iw, ih, cRatio, faceCenterFrac) {
     const iRatio = iw / ih;
